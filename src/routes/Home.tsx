@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import styles from "./Home.module.css";
+import {Link} from "react-router";
 
 function Home() {
     // 초기값이 이미 true로 들어가기 때믄에, 타입스크입트 엔진이 loading에 대해 boolean으로 고정시킴
@@ -18,7 +20,7 @@ function Home() {
     useEffect(() => {
         fetch("https://jsonplaceholder.typicode.com/posts")
             .then(res => res.json())
-            .then((json: { userId: string, id: number, title: string, body: string }[]) => {
+            .then((json: { userId: string; id: number; title: string; body: string }[]) => {
                 setPosts(json);
                 setLoading(false);
             })
@@ -27,7 +29,35 @@ function Home() {
             });
     }, []);
 
-    return <></>;
+    if (loading) {
+        return <div className={styles.loading}>데이터를 로딩 중입니다...</div>;
+    }
+
+    return (
+        <div className={styles.container}>
+            <h1 className={styles.title}>커뮤니티 게시판</h1>
+            <table className={styles.boardTable}>
+                <thead>
+                    <tr>
+                        <th className={styles.idCell}>번호</th>
+                        <th className={styles.titleCell}>제목</th>
+                        <th>작성자 ID</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {posts.map((value, index) => (
+                        <tr key={index} className={styles.tableRow}>
+                            <td className={styles.idCell}>{value.id}</td>
+                            <td className={styles.titleCell}>
+                                <Link to={`/${value.id}`} className={styles.link}>{value.title}</Link>
+                            </td>
+                            <td style={{ textAlign: "center", color: "#666" }}>{value.userId}</td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+        </div>
+    );
 }
 
 export default Home;
