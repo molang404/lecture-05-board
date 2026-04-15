@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import styles from "./Home.module.css";
 import {Link} from "react-router";
+import type { PostType } from "./Detail.tsx";
 
 function Home() {
     // 초기값이 이미 true로 들어가기 때믄에, 타입스크입트 엔진이 loading에 대해 boolean으로 고정시킴
@@ -13,14 +14,12 @@ function Home() {
     // never[]  => 배열은 배열인데, 안에 결코 요소가 들어갈 수 없는 상태
 
     // 앞으로 어떠한 요소가 들어가는 배열이 될지를 지정해줘야 함
-    const [posts, setPosts] = useState<
-        { userId: string; id: number; title: string; body: string }[]
-    >([]);
+    const [posts, setPosts] = useState<PostType[]>([]);
 
     useEffect(() => {
         fetch("https://jsonplaceholder.typicode.com/posts")
             .then(res => res.json())
-            .then((json: { userId: string; id: number; title: string; body: string }[]) => {
+            .then((json: PostType[]) => {
                 setPosts(json);
                 setLoading(false);
             })
